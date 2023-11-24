@@ -27,29 +27,29 @@ const testText = [
   "or$center$justified$within$its$column.",
 ];
 
-function paddWords(word, maxLength, justify, char) {
+function padWord(word, maxLength, justify, char) {
+  if (!word) return "";
   char ||= " ";
-  word ||= "";
+  // word ||= "";
   let toPad = maxLength - word.length;
 
-  // Justify columns to the left
-  if (justify === "left") return word + char.repeat(toPad);
-  // Justify columns to the right
-  else if (justify === "right") return char.repeat(toPad) + word;
-  // Justify columns to the center
-  else if (justify === "center") {
-    let padLeft = Math.floor(toPad / 2);
-    let padRight = toPad - padLeft;
-    return char.repeat(padLeft) + word + char.repeat(padRight);
+  switch (justify) {
+    // Justify columns to the left
+    case "left":
+      return word + char.repeat(toPad);
+    // Justify columns to the right
+    case "right":
+      return char.repeat(toPad) + word;
+    // Justify columns to the center
+    default:
+      let padLeft = Math.floor(toPad / 2);
+      let padRight = toPad - padLeft;
+      return char.repeat(padLeft) + word + char.repeat(padRight);
   }
 }
 
 function formatText(input, justification) {
   // First, map through the array of strings and delete all the dollar characters if any. The challange doesn't specify anything of removing other non-alphanumeric characters such as period and quotetions marks, so will leave those in place.
-
-  // let noDollars = input.map((str) => str.replaceAll("$", " "));
-
-  // Loop through this newly created noDollars array to...
   let wordsPerLines = input.map((str) =>
     str.replaceAll("$", " ").trimEnd().split(" ")
   );
@@ -74,17 +74,18 @@ function formatText(input, justification) {
         line.length <= currentColumnIndex ? 0 : line[currentColumnIndex].length
       )
     );
-
+    // To apply the padding to each line, map through the array or splitted strings once more and call the padWord function
     wordsPerLines.map((wordsInLine, currentLineIndex) => {
-      let paddedWord = paddWords(
+      let paddedWord = padWord(
         wordsInLine[currentColumnIndex],
         longestWord,
         justification
       );
-      outputLines[currentLineIndex] += `${paddedWord} `;
+      if (paddedWord !== "") outputLines[currentLineIndex] += `${paddedWord} `;
     });
   }
 
+  // Return the block of text with its correct padding.
   return outputLines
     .map(
       (line, index) =>
@@ -94,6 +95,6 @@ function formatText(input, justification) {
     .join("\n");
 }
 
-console.log(formatText(testText, "left"));
 console.log(formatText(testText, "right"));
+console.log(formatText(testText, "left"));
 console.log(formatText(testText, "center"));
