@@ -1,16 +1,19 @@
 function selectionSort(arr) {
-  let temp = 0;
-  for (let i = 0; i < arr.length; i++) {
-    for (let j = i + 1; j < arr.length; j++) {
-      // console.log(arr, arr[j], arr[i])
+  const swap = (arr, idx1, idx2) =>
+    ([arr[idx1], arr[idx2]] = [arr[idx2], arr[idx1]]);
 
-      if (arr[i] > arr[j]) {
-        temp = arr[i];
-        arr[i] = arr[j];
-        arr[j] = temp;
+  for (let i = 0; i < arr.length; i++) {
+    //Store the first element as the smallest value seen so far.
+    let lowest = i;
+    for (let j = i + 1; j < arr.length; j++) {
+      //  Compare this item to the next item in the array until a smaller number is found.
+      if (arr[lowest] > arr[j]) {
+        lowest = j;
       }
     }
+    if (i !== lowest) swap(arr, i, lowest);
   }
+
   return arr;
 }
 
